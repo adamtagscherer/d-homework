@@ -1,13 +1,14 @@
 <?php
 
-use Src\Controllers\LoginController;
+use Src\Controllers\RegistrationController;
 
-$loginController = new LoginController();
+$registrationController = new RegistrationController();
 
 $request = \Klein\Request::createFromGlobals();
 $request->server()->set('REQUEST_URI', substr($_SERVER['REQUEST_URI'],  strlen(APP_PATH)));
 $klein = new \Klein\Klein();
 
-$klein->respond('GET', '/admin/login', [$loginController, 'getLogin']);
+$klein->respond('GET', '/registration', [$registrationController, 'getRegistration']);
+$klein->respond('POST', '/registration', [$registrationController, 'postRegistration']);
 
 $klein->dispatch($request);

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+      <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    {% endblock %}
+  </head>
+  <body>
+    <div class="my-5">
+      {% block body %}{% endblock %}
+    </div>
+  </body>
+  <footer>
+    {% block footer %}
+    <link rel="stylesheet" href="assets/js/bootstrap.min.js">
+    {% endblock %}
+  </footer>
+</html>

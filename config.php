@@ -1,9 +1,7 @@
 <?php
 
 define('APP_PATH', '/d-homework');
-
-$config = array(
-  'dbServerName' => 'localhost',
-  'dbUserName' => 'root',
-  'dbPassword' => ''
-);
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'd-homework');
+define('DB_USER', 'root');
+define('DB_PW', '');

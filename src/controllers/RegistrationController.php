@@ -10,13 +10,14 @@ class RegistrationController extends BaseController {
   }
 
   public function postRegistration() {
-    $sql = "INSERT INTO user (email, name, password)
+    $sql =
+    "INSERT INTO user (email, name, password)
     VALUES (?, ?, ?)";
 
     $sth = $this->dbConnection->prepare($sql);
-    $sth->execute(array($_POST['email'], $_POST['name'], $_POST['password']));
+    $sth->execute(array($_POST['email'], $_POST['name'], \password_hash($_POST['password'], PASSWORD_DEFAULT)));
 
-    mail("kidama62@gmail.com", "My subject", "pog");
+    // mail("kidama62@gmail.com", "My subject", "pog");
 
     $this->getRegistration();
   }

@@ -19,7 +19,7 @@ class LoginController extends BaseController {
       if($loginAttempt) {
         $_SESSION['email'] = $user['email'];
         $_SESSION['name'] = $user['name'];
-        $this->redirect('greeting');
+        $this->redirect('admin/greeting');
       }
 
     $this->invalidLoginAttempt($user, $_POST['password']);
@@ -31,7 +31,7 @@ class LoginController extends BaseController {
 
     }
 
-    $this->invalidLoginAttempt('no-user', $_POST['password']);
+    $this->invalidLoginAttempt($_POST['email'], $_POST['password']);
 
     $template = $this->twig->load('login.html');
     echo $template->render([
@@ -58,7 +58,7 @@ class LoginController extends BaseController {
       die;
     }
 
-    $user = $this->getUser($params['email']);
+    $user = $this->fetchUser($params['email']);
 
     if($user) return $user;
   }
@@ -69,15 +69,7 @@ class LoginController extends BaseController {
     VALUES (?, ?)";
 
     $sth = $this->dbConnection->prepare($sql);
-
-    if(is_array($user)) {
-      $sth->execute([$user['email'], $password]);
-    }
-
-    if($user === 'no-user') {
-      $sth->execute(['', $password]);
-    }
-
+    $sth->execute([$user['email'] ?? $user, $password]);
   }
 
 }

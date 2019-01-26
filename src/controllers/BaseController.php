@@ -15,6 +15,7 @@ class BaseController {
 
     if(isset($_SESSION['name'])) $this->twig->addGlobal('name', $_SESSION['name']);
     if(isset($_SESSION['email'])) $this->twig->addGlobal('email', $_SESSION['email']);
+    $this->twig->addGlobal('baseUrl', SERVER_NAME . APP_PATH);
 
     $this->dbConnection = new \PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PW);
   }
@@ -24,14 +25,14 @@ class BaseController {
     die;
   }
 
-  protected function getUser(string $email) {
+  protected function fetchUser($email) {
     $sql =
     "SELECT *
     FROM user
     WHERE email=?";
 
     $sth = $this->dbConnection->prepare($sql);
-    $sth->execute([$email]);
+    $sth->execute([$email ?? $_SESSION['email']]);
 
     return $sth->fetch(\PDO::FETCH_ASSOC);
   }

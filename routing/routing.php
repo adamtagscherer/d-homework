@@ -22,6 +22,14 @@ $klein->respond('POST', '/login', [$loginController, 'postLogin']);
 
 $klein->respond('GET', '/logout', [$logoutController, 'getLogout']);
 
-$klein->respond('GET', '/greeting', [$greetingController, 'getGreeting']);
+$klein->with('/admin', function () use ($klein) {
+  $klein->respond(function ($request, $response) {
+    if(! isset($_SESSION['email'])) {
+      $response->redirect(APP_PATH . '/login')->send();
+    }
+  });
+});
+
+$klein->respond('GET', '/admin/greeting', [$greetingController, 'getGreeting']);
 
 $klein->dispatch($request);

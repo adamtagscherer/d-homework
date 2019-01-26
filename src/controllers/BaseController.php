@@ -13,7 +13,31 @@ class BaseController {
       // 'cache' => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'views/cache'
     ]);
 
+    if(isset($_SESSION['name'])) $this->twig->addGlobal('name', $_SESSION['name']);
+    if(isset($_SESSION['email'])) $this->twig->addGlobal('email', $_SESSION['email']);
+
     $this->dbConnection = new \PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PW);
+  }
+
+  protected function redirect(String $route) {
+    header('Location: ' . SERVER_NAME . APP_PATH . DIRECTORY_SEPARATOR . $route);
+    die;
+  }
+
+  protected function getUser(string $email) {
+    $sql =
+    "SELECT *
+    FROM user
+    WHERE email=?";
+
+    $sth = $this->dbConnection->prepare($sql);
+    $sth->execute([$email]);
+
+    return $sth->fetch(\PDO::FETCH_ASSOC);
+  }
+
+  public function authenticate(string $userPassword, string $paramPassword) {
+    return \password_verify($userPassword, $paramPassword);
   }
 
 }

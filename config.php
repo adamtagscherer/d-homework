@@ -1,6 +1,6 @@
 <?php
 
-define('SERVER_NAME', 'localhost');
+define('SERVER_NAME', 'http://localhost');
 define('APP_PATH', '/d-homework');
 
 define('DB_HOST', 'localhost');

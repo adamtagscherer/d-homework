@@ -5,13 +5,13 @@ namespace Src\Controllers;
 class LoginController extends BaseController {
 
   public function getLogin() : void {
-    if($_GET['action'] === 'successful-registration')
+    if(isset($_GET['action']) && $_GET['action'] === 'successful-registration')
       $params['success'] = 'Successful account activation.';
 
-    if($_GET['action'] === 'unsuccessful-registration')
+    if(isset($_GET['action']) && $_GET['action'] === 'unsuccessful-registration')
       $params['error'] = 'Token expired.';
 
-    $this->render('login', $params);
+    $this->render('login', $params ?? []);
   }
 
   public function postLogin() : void {
@@ -55,7 +55,7 @@ class LoginController extends BaseController {
 
     $user = $this->fetchUser($params['email']);
 
-    if(!$user['active']) {
+    if($user && !$user['active']) {
       $this->render('login', [
         'error' => 'The account is not activated yet.'
       ]);

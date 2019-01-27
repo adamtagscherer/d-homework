@@ -2,10 +2,15 @@
 
 namespace Src\Controllers;
 
+use Src\Models\UserTrait;
+use Src\Models\LoginAttemptTrait;
+use Src\Models\RegistrationTokenTrait;
+
 class BaseController {
 
   protected $twig;
   protected $dbConnection;
+  use UserTrait, LoginAttemptTrait, RegistrationTokenTrait;
 
   function __construct() {
     $loader = new \Twig_Loader_Filesystem(dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'views');
@@ -25,16 +30,10 @@ class BaseController {
     die;
   }
 
-  protected function fetchUser($email) {
-    $sql =
-    "SELECT *
-    FROM user
-    WHERE email=?";
-
-    $sth = $this->dbConnection->prepare($sql);
-    $sth->execute([$email ?? $_SESSION['email']]);
-
-    return $sth->fetch(\PDO::FETCH_ASSOC);
+  protected function render($template, $parameters) {
+    $template = $this->twig->load($template . '.html');
+    echo $template->render($parameters);
+    die;
   }
 
   public function authenticate(string $userPassword, string $paramPassword) {

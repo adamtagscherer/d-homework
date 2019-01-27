@@ -32,4 +32,6 @@ $klein->with('/admin', function () use ($klein) {
 
 $klein->respond('GET', '/admin/greeting', [$greetingController, 'getGreeting']);
 
+$klein->respond('GET', '/registration-token/[:token]', [$registrationController, 'activateUser']);
+
 $klein->dispatch($request);

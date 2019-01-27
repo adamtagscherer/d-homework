@@ -5,8 +5,13 @@ namespace Src\Controllers;
 class LoginController extends BaseController {
 
   public function getLogin() : void {
-    $template = $this->twig->load('login.html');
-    echo $template->render();
+    if($_GET['action'] === 'successful-registration')
+      $params['success'] = 'Successful account activation.';
+
+    if($_GET['action'] === 'unsuccessful-registration')
+      $params['error'] = 'Token expired.';
+
+    $this->render('login', $params);
   }
 
   public function postLogin() : void {
@@ -22,54 +27,41 @@ class LoginController extends BaseController {
         $this->redirect('admin/greeting');
       }
 
-    $this->invalidLoginAttempt($user, $_POST['password']);
-    $template = $this->twig->load('login.html');
-    echo $template->render([
-      'error' => 'Wrong credentials.'
-    ]);
-    die;
-
+      $this->invalidLoginAttempt($user, $_POST['password']);
+      $this->render('login', [
+        'error' => 'Wrong credentials.'
+      ]);
     }
 
     $this->invalidLoginAttempt($_POST['email'], $_POST['password']);
-
-    $template = $this->twig->load('login.html');
-    echo $template->render([
+    $this->render('login', [
       'error' => 'No user found.'
     ]);
-    die;
 
   }
 
   private function preValidateLogin($params) {
     if(empty($params['email'])) {
-      $template = $this->twig->load('login.html');
-      echo $template->render([
+      $this->render('login', [
         'error' => 'Please provide email.'
       ]);
-      die;
     }
 
     if(empty($params['password'])) {
-      $template = $this->twig->load('login.html');
-      echo $template->render([
+      $this->render('login', [
         'error' => 'Please provide password.'
       ]);
-      die;
     }
 
     $user = $this->fetchUser($params['email']);
 
+    if(!$user['active']) {
+      $this->render('login', [
+        'error' => 'The account is not activated yet.'
+      ]);
+    }
+
     if($user) return $user;
-  }
-
-  private function invalidLoginAttempt($user, $password) {
-    $sql =
-    "INSERT INTO login_attempts (email, password)
-    VALUES (?, ?)";
-
-    $sth = $this->dbConnection->prepare($sql);
-    $sth->execute([$user['email'] ?? $user, $password]);
   }
 
 }

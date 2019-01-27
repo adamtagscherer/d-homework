@@ -1,9 +1,9 @@
 <?php
 
-use Src\Controllers\RegistrationController;
+use Src\Controllers\GreetingController;
 use Src\Controllers\LoginController;
 use Src\Controllers\LogoutController;
-use Src\Controllers\GreetingController;
+use Src\Controllers\RegistrationController;
 
 $registrationController = new RegistrationController();
 $loginController = new LoginController();
@@ -20,22 +20,22 @@ $klein->respond('GET', '/logout', [$logoutController, 'getLogout']);
 
 // If the user is not logged in then it cannot visit the protected pages.
 $klein->with('/admin', function () use ($klein) {
-  $klein->respond(function ($request, $response) {
-    if(! isset($_SESSION['email'])) {
-      $response->redirect(APP_PATH . '/login')->send();
-    }
-  });
+    $klein->respond(function ($request, $response) {
+        if (!isset($_SESSION['email'])) {
+            $response->redirect(APP_PATH . '/login')->send();
+        }
+    });
 });
 
 $klein->respond('GET', '/admin/greeting', [$greetingController, 'getGreeting']);
 
 // If the user is logged in then it cannot visit the login and registration pages.
 $klein->with('/?', function () use ($klein) {
-  $klein->respond(function ($request, $response) {
-    if(isset($_SESSION['email'])) {
-      $response->redirect(APP_PATH . '/admin/greeting')->send();
-    }
-  });
+    $klein->respond(function ($request, $response) {
+        if (isset($_SESSION['email'])) {
+            $response->redirect(APP_PATH . '/admin/greeting')->send();
+        }
+    });
 });
 
 $klein->respond('GET', '/registration', [$registrationController, 'getRegistration']);

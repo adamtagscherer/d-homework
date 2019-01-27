@@ -4,7 +4,12 @@ namespace Src\Controllers;
 
 class LoginController extends BaseController {
 
-  public function getLogin() : void {
+  /**
+   * Renders login page.
+   *
+   * @return void
+   */
+  public function getLogin() {
     if(isset($_GET['action']) && $_GET['action'] === 'successful-registration')
       $params['success'] = 'Successful account activation.';
 
@@ -14,7 +19,12 @@ class LoginController extends BaseController {
     $this->render('login', $params ?? []);
   }
 
-  public function postLogin() : void {
+  /**
+   * Handles the login page HTTP POST action.
+   *
+   * @return void
+   */
+  public function postLogin() {
 
     $user = $this->preValidateLogin($_POST);
 
@@ -27,7 +37,7 @@ class LoginController extends BaseController {
         $this->redirect('admin/greeting');
       }
 
-      $this->invalidLoginAttempt($user, $_POST['password']);
+      $this->invalidLoginAttempt($user['email'], $_POST['password']);
       $this->render('login', [
         'error' => 'Wrong credentials.'
       ]);
@@ -40,7 +50,13 @@ class LoginController extends BaseController {
 
   }
 
-  private function preValidateLogin($params) {
+  /**
+   * Login page HTTP POST action validation logic.
+   *
+   * @param array $params
+   * @return void
+   */
+  private function preValidateLogin(array $params) {
     if(empty($params['email'])) {
       $this->render('login', [
         'error' => 'Please provide email.'

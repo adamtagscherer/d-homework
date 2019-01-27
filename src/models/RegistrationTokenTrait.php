@@ -4,7 +4,14 @@ namespace Src\Models;
 
 trait RegistrationTokenTrait {
 
-  protected function insertRegistrationToken($email, $token) {
+  /**
+   * Insert new registration token assigned to email.
+   *
+   * @param string $email
+   * @param string $token
+   * @return void
+   */
+  protected function insertRegistrationToken(string $email, string $token) {
     $sql =
     "INSERT INTO registration_token (email, token)
     VALUES (?, ?)";
@@ -13,7 +20,14 @@ trait RegistrationTokenTrait {
     $sth->execute([$email, $token]);
   }
 
-  protected function getTokenEntity($token) {
+  /**
+   * Selects a token and sets it's deleted_at attribute if it's older than one day.
+   * If there's a valid token then returns it.
+   *
+   * @param string $token
+   * @return void
+   */
+  protected function getTokenEntity(string $token) {
     $sql =
     "SELECT *
     FROM registration_token
@@ -32,11 +46,23 @@ trait RegistrationTokenTrait {
     return $tokenEntity;
   }
 
-  protected function isTokenExpired($tokenEntity) {
+  /**
+   * Checks if the given token is older than one day.
+   *
+   * @param array $tokenEntity
+   * @return boolean
+   */
+  protected function isTokenExpired(array $tokenEntity) {
     return strtotime($tokenEntity['created_at']) < (time() - (60 * 60 * 24));
   }
 
-  protected function deleteToken($tokenEntity) {
+  /**
+   * Updates a token's deleted_at field to the current datetime.
+   *
+   * @param array $tokenEntity
+   * @return void
+   */
+  protected function deleteToken(array $tokenEntity) {
     $sql =
     "UPDATE registration_token
     SET deleted_at=now()
@@ -46,7 +72,14 @@ trait RegistrationTokenTrait {
     $sth->execute([$tokenEntity['email']]);
   }
 
-  protected function generateNewToken($email) {
+  /**
+   * Deletes the tokens assigned to the given email then generates a new token inserts it to the database
+   * and sends an email with it's URL.
+   *
+   * @param string $email
+   * @return void
+   */
+  protected function sendNewToken(string $email) {
     $this->deleteToken(['email' => $email]);
     $token = $this->generateRegistrationToken(32);
     $this->insertRegistrationToken($email, $token);

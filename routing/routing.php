@@ -14,14 +14,11 @@ $request = \Klein\Request::createFromGlobals();
 $request->server()->set('REQUEST_URI', substr($_SERVER['REQUEST_URI'], strlen(APP_PATH)));
 $klein = new \Klein\Klein();
 
-$klein->respond('GET', '/registration', [$registrationController, 'getRegistration']);
-$klein->respond('POST', '/registration', [$registrationController, 'postRegistration']);
-
-$klein->respond('GET', '/login', [$loginController, 'getLogin']);
-$klein->respond('POST', '/login', [$loginController, 'postLogin']);
+$klein->respond('GET', '/registration-token/[:token]', [$registrationController, 'activateUser']);
 
 $klein->respond('GET', '/logout', [$logoutController, 'getLogout']);
 
+// If the user is not logged in then it cannot visit the protected pages.
 $klein->with('/admin', function () use ($klein) {
   $klein->respond(function ($request, $response) {
     if(! isset($_SESSION['email'])) {
@@ -32,6 +29,19 @@ $klein->with('/admin', function () use ($klein) {
 
 $klein->respond('GET', '/admin/greeting', [$greetingController, 'getGreeting']);
 
-$klein->respond('GET', '/registration-token/[:token]', [$registrationController, 'activateUser']);
+// If the user is logged in then it cannot visit the login and registration pages.
+$klein->with('/?', function () use ($klein) {
+  $klein->respond(function ($request, $response) {
+    if(isset($_SESSION['email'])) {
+      $response->redirect(APP_PATH . '/admin/greeting')->send();
+    }
+  });
+});
+
+$klein->respond('GET', '/registration', [$registrationController, 'getRegistration']);
+$klein->respond('POST', '/registration', [$registrationController, 'postRegistration']);
+
+$klein->respond('GET', '/login', [$loginController, 'getLogin']);
+$klein->respond('POST', '/login', [$loginController, 'postLogin']);
 
 $klein->dispatch($request);

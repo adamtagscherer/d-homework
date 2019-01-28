@@ -54,7 +54,7 @@ class RegistrationController extends BaseController
      * digit, special character and must be at least 6 character long.
      *
      * @param string $string
-     * @return \bool
+     * @return bool
      */
     private function isPasswordStrong(string $string): bool
     {

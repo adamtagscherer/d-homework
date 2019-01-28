@@ -48,9 +48,9 @@ trait RegistrationTokenTrait
      * Checks if the given token is older than one day.
      *
      * @param array $tokenEntity
-     * @return boolean
+     * @return bool
      */
-    protected function isTokenExpired(array $tokenEntity)
+    protected function isTokenExpired(array $tokenEntity): bool
     {
         return strtotime($tokenEntity['created_at']) < (time() - (60 * 60 * 24));
     }

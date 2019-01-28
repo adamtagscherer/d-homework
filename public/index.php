@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include_once '../vendor/autoload.php';
+include_once __DIR__ . '/../vendor/autoload.php';
 
-include_once '../config.php';
-include_once '../routing/routing.php';
+include_once __DIR__ . '/../config.php';
+include_once __DIR__ . '/../routing/routing.php';

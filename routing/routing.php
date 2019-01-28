@@ -44,4 +44,8 @@ $klein->respond('POST', '/registration', [$registrationController, 'postRegistra
 $klein->respond('GET', '/login', [$loginController, 'getLogin']);
 $klein->respond('POST', '/login', [$loginController, 'postLogin']);
 
+$klein->respond(function ($request, $response, $service, $app) {
+    $response->redirect(APP_PATH . '/login');
+});
+
 $klein->dispatch($request);

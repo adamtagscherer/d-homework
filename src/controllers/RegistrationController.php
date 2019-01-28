@@ -54,9 +54,9 @@ class RegistrationController extends BaseController
      * digit, special character and must be at least 6 character long.
      *
      * @param string $string
-     * @return boolean
+     * @return \bool
      */
-    private function isPasswordStrong(string $string): boolean
+    private function isPasswordStrong(string $string): bool
     {
         $containsSmallLetter = preg_match('/[a-z]/', $string);
         $containsCapsLetter = preg_match('/[A-Z]/', $string);

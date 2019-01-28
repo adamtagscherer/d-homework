@@ -8,12 +8,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 The following softwares needs to be installed locally to make the project run.
 
-```
 * [Apache](https://httpd.apache.org/) - The web server used.
 * [MySQL](https://www.mysql.com/) - The database.
 * [PHP 7+](http://php.net/) - Coding language.
 * [Composer](https://getcomposer.org/) - Dependency manager.
-```
 
 ### Installing
 
